@@ -34,6 +34,7 @@ const authMiddleware = async (req, res, next) => {
         if (!req.body.userId) {
             req.body.userId = decoded.id;
         }
+        
 
         next();
     } catch (error) {

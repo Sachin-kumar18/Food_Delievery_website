@@ -1,0 +1,69 @@
+# ========================
+# Environment Variables
+# ========================
+.env
+.env.*
+.env.local
+.env.development
+.env.production
+.env.test
+
+# ========================
+# Dependencies
+# ========================
+node_modules/
+**/node_modules/
+
+# ========================
+# Uploads / Media
+# ========================
+uploads/
+**/uploads/
+*.jpg
+*.jpeg
+*.png
+*.gif
+*.mp4
+*.pdf
+
+# ========================
+# Logs
+# ========================
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ========================
+# Build Output
+# ========================
+dist/
+build/
+.next/
+out/
+
+# ========================
+# OS Files
+# ========================
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ========================
+# Editor / IDE
+# ========================
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+
+# ========================
+# Misc
+# ========================
+.cache/
+.temp/
+*.zip
+*.tar.gz

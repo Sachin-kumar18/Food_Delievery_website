@@ -1,4 +1,5 @@
 import userModel from "../models/userModel.js";
+<<<<<<< HEAD
 import { loginUserService } from "../services/userService.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
@@ -75,3 +76,44 @@ const registerUser = async (req, res) => {
 };
 
 export { loginUSer, registerUser };
+=======
+import jwt from "jsonwebtoken";
+import bcrypt from "bcrypt";
+import validator from "validator";
+import asyncHandler from "../utils/asyncHandler.js";
+import AppError from "../utils/AppError.js";
+
+const createToken = (id) => jwt.sign({ id }, process.env.JWT_SECRET);
+
+const loginUser = asyncHandler(async (req, res) => {
+  const { email, password } = req.body;
+
+  const user = await userModel.findOne({ email });
+  if (!user) throw new AppError("User doesn't exist", 404);
+
+  const isMatch = await bcrypt.compare(password, user.password);
+  if (!isMatch) throw new AppError("Invalid credentials", 401);
+
+  res.json({ success: true, token: createToken(user._id) });
+});
+
+const registerUser = asyncHandler(async (req, res) => {
+  const { name, password, email } = req.body;
+
+  const exists = await userModel.findOne({ email });
+  if (exists) throw new AppError("User already exists", 409);
+
+  if (!validator.isEmail(email)) throw new AppError("Please enter a valid email", 400);
+  if (password.length < 8) throw new AppError("Please enter a strong password", 400);
+
+  const salt = await bcrypt.genSalt(10);
+  const hashedPassword = await bcrypt.hash(password, salt);
+
+  const newUser = new userModel({ name, email, password: hashedPassword });
+  const user = await newUser.save();
+
+  res.json({ success: true, token: createToken(user._id) });
+});
+
+export { loginUser, registerUser };
+>>>>>>> refactor/error-handling

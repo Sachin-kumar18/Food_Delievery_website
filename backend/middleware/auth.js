@@ -1,46 +1,17 @@
-// import jwt from "jsonwebtoken"
-
-// const authMiddleware = async (req,res,next) => {
-//     const {token} = req.headers;
-//     if(!token){
-//         return res.json({success:false,message:"Not Authorized Login Again"})
-//     }
-//     try {
-//         const token_decode = jwt.verify(token,process.env.JWT_SECRET);
-//         req.body.userId = token_decode.id;
-//         next();
-//     } catch (error) {
-//         console.log(error);
-//         res.json({success:false,message:"Error"})
-//     }
-// }
-
-// export default authMiddleware;
-
 import jwt from "jsonwebtoken";
+import asyncHandler from "../utils/asyncHandler.js";
+import AppError from "../utils/AppError.js";
 
-const authMiddleware = async (req, res, next) => {
-    const { token } = req.headers;
+const authMiddleware = asyncHandler(async (req, res, next) => {
+  const { token } = req.headers;
 
-    if (!token) {
-        return res.json({ success: false, message: "Not Authorized Login again." });
-    }
+  if (!token) throw new AppError("Not authorized. Please login again.", 401);
 
-    try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+  const decoded = jwt.verify(token, process.env.JWT_SECRET);
+  if (!req.body) req.body = {};
+  if (!req.body.userId) req.body.userId = decoded.id;
 
-        if (!req.body) req.body = {};
-
-        if (!req.body.userId) {
-            req.body.userId = decoded.id;
-        }
-        
-
-        next();
-    } catch (error) {
-        console.log("JWT error:", error);
-        res.json({ success: false, message: "Invalid token" });
-    }
-};
+  next();
+});
 
 export default authMiddleware;

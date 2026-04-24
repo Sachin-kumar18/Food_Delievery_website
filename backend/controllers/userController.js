@@ -5,7 +5,10 @@ import validator from "validator";
 import asyncHandler from "../utils/asyncHandler.js";
 import AppError from "../utils/AppError.js";
 
-const createToken = (id) => jwt.sign({ id }, process.env.JWT_SECRET);
+const createToken = (id) => {
+  if (!process.env.JWT_SECRET) throw new AppError("JWT_SECRET missing in .env", 500);
+  return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: "1d" });
+};
 
 const loginUser = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
